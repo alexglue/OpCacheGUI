@@ -7,7 +7,18 @@ foreach($status->getCachedScripts() as $data) {
     $directories[dirname($data['full_path'])][basename($data['full_path'])] = $data;
 }
 ?>
-
+<div>
+    <article class="cols-0">
+    <h2>Clear cache</h2>
+        <div style="border:#333333; padding: 10px;overflow: visible; height: 70px;">
+        <form action="/reset" method="post" id="reset" data-confirmation="<?= $translator->translate('confirmation.reset'); ?>" data-yes="<?= $translator->translate('confirmation.yes'); ?>" data-no="<?= $translator->translate('confirmation.no'); ?>">
+            <button><a href="javascript:document.location.reload();">F5</a></button>
+            <input type="hidden" name="csrfToken" value="<?= $csrfToken->get(); ?>">
+            <input type="submit" name="submit" value="<?= $translator->translate('reset.submit'); ?>">
+        </form>
+        </div>
+    </article>
+</div>
 <article class="cols-1">
     <h2><?= $translator->translate('scripts.title'); ?></h2>
     <table id="cached">
@@ -50,4 +61,21 @@ foreach($status->getCachedScripts() as $data) {
             <?php } ?>
         </tbody>
     </table>
+<?php $apcuCache = function_exists( 'apc_cache_info' )? @apc_cache_info() : false; ?>
+<?php if( $apcuCache ){ ?>
+<h2>APCu cache</h2>
+<table id="cached">
+	<tr class="script">
+		<th >Key</th><th>Mem_size</th><th>Created</th>
+	</tr>
+<?php if( !empty( $apcuCache['cache_list']  ) ) foreach( $apcuCache['cache_list'] as $num => $cpage ){ ?>
+	<tr>
+		<td class="directory" data-directory="<?= 'apcu_' . $num ?>"><img src="/style/toggle-expand.png" alt="+"><?= $cpage['key'] ?></td><td><?= $cpage['mem_size'] ?></td><td><?=$cpage['ctime']?></td>
+	</tr>
+    <tr class="script" data-directory="<?= 'apcu_' . $num ?>"><td><?= json_encode( apc_fetch( $cpage['key'] ) ) ?></td></tr>
+<?php } ?>
+
+</table>
+<?php } ?>
 </article>
+

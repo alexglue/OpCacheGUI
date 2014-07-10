@@ -41,8 +41,32 @@ class Status
      */
     public function __construct(Byte $byteFormatter)
     {
+
+        if( !function_exists( 'opcache_get_status' ) ){
+            echo 'Seems like your opcache module are disabled!';
+            exit();
+        }
+
         $this->byteFormatter = $byteFormatter;
         $this->statusData    = opcache_get_status();
+
+        if( !$this->statusData ){
+
+            $this->statusData = [
+                'opcache_enabled' => false,
+                'cache_full' => false,
+                'restart_pending' => false,
+                'restart_in_progress' => false,
+                'used_memory'               => 0,
+                'free_memory'               => '100%',
+                'wasted_memory'             => 0,
+                'current_wasted_percentage' => 0,
+                'memory_usage' => [],
+                'opcache_statistics' => [],
+                'scripts' => []
+
+            ];
+        }
     }
 
     /**
@@ -69,12 +93,12 @@ class Status
     {
         $memory = $this->statusData['memory_usage'];
 
-        return [
+        return $memory? [
             'used_memory'               => $this->byteFormatter->format($memory['used_memory']),
             'free_memory'               => $this->byteFormatter->format($memory['free_memory']),
             'wasted_memory'             => $this->byteFormatter->format($memory['wasted_memory']),
             'current_wasted_percentage' => round($memory['current_wasted_percentage'], 2) . '%',
-        ];
+        ] : [];
     }
 
     /**
@@ -111,7 +135,7 @@ class Status
     {
         $stats = $this->statusData['opcache_statistics'];
 
-        return [
+        return $stats? [
             'num_cached_scripts'   => $stats['num_cached_scripts'],
             'num_cached_keys'      => $stats['num_cached_keys'],
             'max_cached_keys'      => $stats['max_cached_keys'],
@@ -125,7 +149,7 @@ class Status
             'oom_restarts'         => $stats['oom_restarts'],
             'hash_restarts'        => $stats['hash_restarts'],
             'manual_restarts'      => $stats['manual_restarts'],
-        ];
+        ] : [];
     }
 
     /**
