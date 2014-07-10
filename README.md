@@ -16,7 +16,7 @@ Installation
 
 ######Git clone
 
-    git clone https://github.com/PeeHaa/OpCacheGUI.git
+    git clone https://github.com/alexglue/OpCacheGUI.git
 
 ######Manual download a release
 
@@ -71,8 +71,8 @@ Screenshots
 [![OpCacheGUI status][1]][1][![OpCacheGUI graphs][2]][2]
 
 [rasmus]: https://github.com/rlerdorf/opcache-status
-[releases]: https://github.com/PeeHaa/OpCacheGUI/releases
-[issues]: https://github.com/PeeHaa/OpCacheGUI/issues
+[releases]: https://github.com/alexglue/OpCacheGUI/releases
+[issues]: https://github.com/alexglue/OpCacheGUI/issues
 [MIT]: http://spdx.org/licenses/MIT
 
 [1]: https://opcachegui.pieterhordijk.com/style/opcachegui-home.png
