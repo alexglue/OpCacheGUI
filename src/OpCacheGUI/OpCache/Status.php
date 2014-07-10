@@ -209,7 +209,12 @@ class Status
      */
     public function getCachedScripts()
     {
+        if (!isset($this->statusData['scripts'])) {
+            return [];
+        }
+
         $scripts = [];
+
         foreach ($this->statusData['scripts'] as $script) {
             if ($script['timestamp'] === 0) {
                 continue;
